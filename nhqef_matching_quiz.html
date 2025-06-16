@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NHQEF Attribute Matching Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9fafb;
+      padding: 2rem;
+      color: #1f2937;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    .definitions, .attributes {
+      flex: 1;
+      min-width: 300px;
+    }
+    .drop-zone {
+      background: #e0ecff;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      min-height: 50px;
+      border: 2px dashed #3b82f6;
+      border-radius: 6px;
+    }
+    .drop-zone.over {
+      background: #dbeafe;
+    }
+    .draggable {
+      padding: 0.5rem 1rem;
+      margin: 0.5rem 0;
+      background: #facc15;
+      border-radius: 4px;
+      cursor: grab;
+    }
+    .correct {
+      background: #86efac !important;
+    }
+    .incorrect {
+      background: #fca5a5 !important;
+    }
+    button {
+      margin-top: 2rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Match NHQEF Attributes to Their Definitions</h1>
+  <p>Drag each attribute to the correct definition box.</p>
+  <div class="container">
+    <div class="definitions">
+      <div class="drop-zone" data-match="KWLG-CNCPT">📖 Understanding of concepts, theories, and principles.</div>
+      <div class="drop-zone" data-match="EMP-OWN">🎯 Taking responsibility for one’s own work and actions.</div>
+      <div class="drop-zone" data-match="SKILL-ANALYZE">🧠 Ability to analyze and synthesize information.</div>
+      <div class="drop-zone" data-match="ETHIC-PRACTICE-ETHIC">⚖️ Acting with fairness, honesty, and integrity in academics.</div>
+    </div>
+    <div class="attributes">
+      <div class="draggable" draggable="true" data-id="ETHIC-PRACTICE-ETHIC">⚖️ ETHIC-PRACTICE-ETHIC</div>
+      <div class="draggable" draggable="true" data-id="KWLG-CNCPT">📘 KWLG-CNCPT</div>
+      <div class="draggable" draggable="true" data-id="SKILL-ANALYZE">🧠 SKILL-ANALYZE</div>
+      <div class="draggable" draggable="true" data-id="EMP-OWN">🎯 EMP-OWN</div>
+    </div>
+  </div>
+  <button onclick="checkAnswers()">Check Answers</button>
+
+  <script>
+    const draggables = document.querySelectorAll('.draggable');
+    const dropZones = document.querySelectorAll('.drop-zone');
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/plain', draggable.dataset.id);
+      });
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => {
+        e.preventDefault();
+        zone.classList.add('over');
+      });
+      zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('over');
+        const data = e.dataTransfer.getData('text/plain');
+        zone.innerHTML = zone.innerHTML.split('<br>')[0] + '<br><strong>' + data + '</strong>';
+        zone.dataset.user = data;
+      });
+    });
+
+    function checkAnswers() {
+      dropZones.forEach(zone => {
+        if (zone.dataset.user === zone.dataset.match) {
+          zone.classList.remove('incorrect');
+          zone.classList.add('correct');
+        } else {
+          zone.classList.remove('correct');
+          zone.classList.add('incorrect');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
